@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+    <title>doug-h</title>
+
+    <!-- Boilerplate to use emscipten -->
+    <script src="em_stuff.js" defer></script>
+    <!-- Emscripten compilation output -->
+    <script src="emscripten.js" defer></script>
+
+    <script src="main.js" defer></script>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <div class="header">
+        <h1> Demos </h1>
+      </div>
+
+      <div class="content">
+        <div class="demo-container">
+          <img id="particles-button" class="demo-button" src="particles.png" data-demo="particles" data-width="720px" data-height="720px">
+          <img id="solitaire-button" class="demo-button" src="solitaire.png" data-demo="solitaire" data-width="1280px" data-height="720px">
+          <img id="cloth-button" class="demo-button" src="cloth.png" data-demo="cloth" data-width="720px" data-height="720px">
+          <img id="birds-button" class="demo-button" src="cloth.png" data-demo="birds" data-width="1280px" data-height="720px">
+        </div>
+
+        <div id="modal"  current_demo=0>
+          <span id="close">×</span>
+          <div class="wrap">
+            <span id="fps-counter">0</span>
+            <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+            <span id="variables">
+              <span class="variable-input" data-demo="particles">
+                <label for="N_PART">Number of particles</label>
+                </br>
+                <input id="N_PART" type="range" min="0" max="18">
+                <span id="label_N_PART" style="margin-left: 20px;">0</span>
+              </span>
+              <span class="variable-input" data-demo="particles">
+                <label for="P_SIZE_MIN">Min particle size</label>
+                </br>
+                <input id="P_SIZE_MIN" type="range" min="2" max="30">
+                <span id="label_P_SIZE_MIN" style="margin-left: 20px;">0</span>
+              </span>
+              <span class="variable-input" data-demo="particles">
+                <label for="P_SIZE_MAX">Max particle size</label>
+                </br>
+                <input id="P_SIZE_MAX" type="range" min="2" max="30">
+                <span id="label_P_SIZE_MAX" style="margin-left: 20px;">0</span>
+              </span>
+              <span class="variable-input" data-demo="particles">
+                <label for="ENERGY_COLOUR">Colour particles based on energy</label>
+                </br>
+                <input id="ENERGY_COLOUR" type="checkbox">
+              </span>
+              <span class="variable-input" data-demo="particles">
+                <label for="COLLISIONS">Particle-particle collisions</label>
+                </br>
+                <input id="COLLISIONS" type="checkbox">
+              </span>
+
+              <span class="variable-input" data-demo="cloth">
+                <label for="CLOTH_GRID">Vertices per side</label>
+                </br>
+                <input id="CLOTH_GRID" type="range" min="2" max="8">
+                <span id="label_CLOTH_GRID" style="margin-left: 20px;">0</span>
+              </span>
+
+              <span class="variable-input" data-demo="birds">
+                <label for="RUN_SPEED">Simulation run speed</label>
+                </br>
+                <input id="RUN_SPEED" type="range" min="0" max="7">
+                <span id="label_RUN_SPEED" style="margin-left: 20px;">0</span>
+              </span>
+
+              <button id="restart" type="button" > Restart </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
