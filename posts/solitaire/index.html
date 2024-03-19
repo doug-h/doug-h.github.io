@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../fonts/fonts.css">
+  <link rel="stylesheet" href="../../site.css">
+  <link rel="stylesheet" href="main.css">
+  <title>doug-h</title>
+
+  <!-- Boilerplate to use emscripten -->
+  <script src="emscripten.js" defer></script>
+  <!-- Compilation output -->
+  <script src="solitaire.js" defer></script>
+
+</head>
+
+<body>
+  <a href="../../index.html">
+    <h1 class="header"> 
+      Doug's Stuff
+      <br>
+    </h1>
+  </a>
+  
+  <div style="text-align: center;">
+    <div id="loading-div"> Loading... </div>
+    <div id="resizeable-container">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    </div>
+
+    <p style="column-count: 2">
+      <b>R</b> - Restart <br>
+    </p>
+    <h1 id="solitaire">Classic Solitaire</h1>
+    Solitaire, in the style originally released with Windows 3.0 OS.
+    <br>
+    <div style="text-align:center;"> * </div> 
+  </div>
+</body>
+
+</html>
