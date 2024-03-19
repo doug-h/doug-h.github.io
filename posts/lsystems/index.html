@@ -12,22 +12,26 @@
   <!-- Boilerplate to use emscripten -->
   <script src="emscripten.js" defer></script>
   <!-- Compilation output -->
-  <script src="lsystems.js" defer></script>
+  <script src="fern.js" defer></script>
 </head>
 
 <body>
-    <a href="index.html">
+    <a href="../../index.html">
     <h1 class="header"> 
       Doug's Stuff
       <br>
     </h1>
     </a>
   
-  <div id="content">
 
-  <div id="emscripten-container" style="width: 900px;">
+  <div id="loading-div"> Loading... </div>
+  <div style="text-align: center;">
+  <div id="emscripten-container" style="display: inline-block; margin: auto; width:900px;">
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
   </div>
+  </div>
+
+  <div id="content">
   <p>
     This app uses L-Systems to draw 2D figures, like plants and fractals.
     Use the menu at the top to load examples and the bar at the bottom to control the number of iterations.
