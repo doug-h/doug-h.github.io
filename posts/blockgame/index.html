@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../fonts/fonts.css">
+  <link rel="stylesheet" href="../../site.css">
+  <link rel="stylesheet" href="main.css">
+  <title>doug-h</title>
+
+  <!-- Boilerplate to use emscipten -->
+  <script src="emscripten.js" defer></script>
+  <!-- Emscripten compilation output -->
+  <script src="blockgame.js" defer></script>
+
+</head>
+
+<body>
+    <a href="../../">
+    <h1 class="header"> 
+      Doug's Stuff <br>
+    </h1>
+    </a>
+  
+  <div id="loading-div"> Loading... </div>
+
+  <div style="text-align: center;">
+    <div id="emscripten-container" style="display: inline-block; margin: auto; width:900px;">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    </div>
+  </div>
+
+  <p style="column-count: 3; margin-left: 10%;">
+    <b>Click on window</b> - Gain focus<br>
+    <b>ESCAPE</b> - Lose focus<br>
+    <br>
+
+    <b>WASD + Mouse</b> - Control player <br>
+    <b>F</b> - Toggle flight<br>
+    <b>SPACE/SHIFT</b> - Fly up/down<br>
+
+    <b> Left click </b> - Break block <br>
+    <b> Right click </b> - Place block <br>
+    <b> Middle click </b> - Select block <br>
+  </p>
+
+  </body>
+
+</html>
