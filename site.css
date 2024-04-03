@@ -116,6 +116,19 @@ figcaption{
   font-size: 16px;
 }
 
+div#loading-div {
+  height:600px; 
+  line-height: 600px;
+  background-image: linear-gradient(var(--colour-highlight1), var(--colour-highlight2));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 5rem;
+}
 div.side-by-side-2 {
   width: 120%;
 

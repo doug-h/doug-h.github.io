@@ -10,6 +10,7 @@ var Module = {
   onRuntimeInitialized: function() {
         var e = document.getElementById('loading-div');
         e.style.visibility = 'hidden';
+        e.style.height = '0px';
 
         var canvas = document.getElementById("canvas");
         var cont = document.getElementById("resizeable-container"); 
