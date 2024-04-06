@@ -1,269 +1,269 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../../fonts/fonts.css">
-  <link rel="stylesheet" href="../../site.css">
-  <link rel="stylesheet" href="main.css">
-  <title>doug-h</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../fonts/fonts.css">
+    <link rel="stylesheet" href="../../site.css">
+    <link rel="stylesheet" href="main.css">
+    <title>doug-h</title>
 
-  <!-- Boilerplate to use emscripten -->
-  <script src="emscripten.js" defer></script>
-  <!-- Compilation output -->
-  <script src="fern.js" defer></script>
-</head>
+    <!-- Boilerplate to use emscripten -->
+    <script src="emscripten.js" defer></script>
+    <!-- Compilation output -->
+    <script src="fern.js" defer></script>
+  </head>
 
-<body>
+  <body>
     <a href="../../">
-    <h1 class="header"> 
-      Doug's Stuff
-      <br>
-    </h1>
+      <h1 class="header"> 
+        Doug's Stuff
+        <br>
+      </h1>
     </a>
-  
 
-  <div style="text-align: center;">
-    <div id="loading-div"> 
-      Loading... 
+
+    <div style="text-align: center;">
+      <div id="loading-div"> 
+        Loading... 
+      </div>
+      <div id="emscripten-container" style="display: inline-block; margin: auto; width:900px;">
+        <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+      </div>
     </div>
-    <div id="emscripten-container" style="display: inline-block; margin: auto; width:900px;">
-      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+
+    <div id="content">
+      <p>
+      This app uses L-Systems to draw 2D figures, like plants and fractals.
+      Use the menu at the top to load examples and the bar at the bottom to control the number of iterations.
+      </p>
+      <h1 id="fern">L-System Plant Generator</h1>
+
+
+
+
+
+      <h2> How it works </h2>
+      <p>
+      An L-System consists of a starting symbol/symbols called the <em>axiom</em>, along with <em>production rules</em> which manipulate those symbols (this terminology comes from <a href="https://en.wikipedia.org/wiki/Formal_grammar">formal language theory</a>).
+      </p>
+      <p>
+      A production rule looks like this: 
+      <span class=production-rule> A &rarr; AB </span>
+      </p>
+      <p>
+      This rule simply replaces the symbol A with the word AB.
+      Applying it to the string "A" generates the string "AB".
+      Applying it again to the result yields  "ABB".
+      Simple.
+
+      </p>
+      <p>
+      Let's add another rule: <span class=production-rule> B &rarr; A </span>
+      </p>
+      <p>
+      Now when we go through each character applying the appropriate rule the result looks like this:
+      </p>
+
+      <p style="text-align: center;">
+      "A" &rarr; "AB" &rarr; "ABA" &rarr; "ABAAB" &rarr; <br> "ABAABABA"  &rarr; ...
+      </p>
+      <p>
+      You can identify 'A' as an organism capable of reproduction (or a branch of a tree/stem of a plant etc.) and 'B' as the offspring (or new shoots on a tree/plant) then the first rule is just <em>reproduction</em> ('A' produces a 'B') and the second rule is kinda like <em>ageing</em> ('B' matures into an 'A').
+      </p>
+      <p>
+      This system is already complex enough to describe a type of branching seen on some trees, root systems and plants, which have a Fibonacci sequence of branches/roots/stems just like the length of strings produced by this system.
+      </p>
+      <figure>
+        <img class="hover-zoom" src="resources/branches.gif">
+        <figcaption>Fibonacci numbers in <em>sneezewort</em>, found on Jill Britton's webpage (<a href="https://web.archive.org/web/20160905160202/http://britton.disted.camosun.bc.ca/fibslide/jbfibslide.htm">archived</a>).</figcaption>
+      </figure>
+
+      <h2> Graphics </h2>
+      <p>
+      The next step is to turn these L-Systems into images.
+      </p>
+      <p>
+      One way is the turtle interpretation, where the symbols in the strings are used as instructions that control a moving cursor (the turtle) around the screen, drawing lines as it moves.
+      </p>
+      <p>
+      Consider this L-System (taken from The Alg. Beauty of Plants 1.24(a)):
+      </p>
+      <div style="text-align:center">
+        <div class="L-System">
+          <span class=axiom>A</span>
+          <br>
+          <br>
+          <span class=production-rule>A &rarr; A[+A]A[-A]A</span>
+        </div>
+      </div>
+      <span style="position:relative; left:420px; top:-76px;">  &larr; The Axiom </span>
+      <span style="position:relative; left:320px; top:-33px;">  &larr; The Production rule(s)</span>
+      <p>
+      Running this system a couple times gives:
+      </p>
+      <p style="text-align: center; margin-left: 1%;">
+      A &rarr; A[+A]A[-A]A &rarr; A[+A]A[-A]A[+A[+A]A[-A]A]A[+A]A[-A]A[-A[+A]A[-A]A]A[+A]A[-A]A &rarr; ...
+      </p>
+      <p>
+      Now we can draw this. 
+      Whenever the turtle sees an 'A' it moves forward and whenever it sees +/- it turns left/right.
+      The square brackets push/pop the turtle's current position, so it can draw something then return to where it was.
+      </p>
+      <p>
+      That's all we need for the turtle to draw this:
+      </p>
+      <figure>
+        <div class="side-by-side-3">
+          <img class="hover-zoom" src="resources/c1_1.png">
+          <img class="hover-zoom" src="resources/c1_2.png">
+          <img class="hover-zoom" src="resources/c1_3.png">
+        </div>
+        <figcaption>  The above L-system after one, two and three iterations. </figcaption>
+      </figure>
+
+      <figure>
+        <img class="hover-zoom" src="resources/c1_5.png">
+        <figcaption> The system after five iterations.</figcaption>
+      </figure>
+
+      <p>
+      The turtle starts at the bottom of the figure, and draws one line at a time.
+      We can now see graphically what the rule is doing: it takes each straight line 'A' and replaces it with the five line pattern 'A[+A]A[-A]A' you see in the first panel.
+      Doing this repeatedly generates this self-similar plant-like structure.
+      </p>
+      <p>
+      Making the rules slightly more complicated we get this (taken from The Alg. Beauty of Plants 1.24(c)):
+      </p>
+      <div style="text-align:center">
+        <div class="L-System">
+          <span class=axiom>A</span>
+          <br>
+          <br>
+          <span class=production-rule>A &rarr; AA-[-A+A+A]+[+A-A-A]</span>
+        </div>
+      </div>
+
+      <figure>
+        <div class="side-by-side-3">
+          <img class="hover-zoom" src="resources/c2_1.png">
+          <img class="hover-zoom" src="resources/c2_2.png">
+          <img class="hover-zoom" src="resources/c2_3.png">
+        </div>
+        <figcaption>  The above L-system after one, two and three iterations. </figcaption>
+      </figure>
+
+      <figure>
+        <img class="hover-zoom" src="resources/c2_4.png">
+        <figcaption> The system after four iterations.</figcaption>
+      </figure>
+
+      <p>
+      This time you can see each straight line 'A' being replaced with the Y-like shape made of eight lines.
+      </p>
+      <p>
+      Let's get more symbols involved (taken from the Alg. Beauty of Plants 1.24(f)):
+      </p>
+      <div style="text-align:center">
+        <div class="L-System">
+          <span class=axiom>B</span>
+          <br>
+          <br>
+          <span class=production-rule>A &rarr; AA </span>
+          <br>
+          <br>
+          <span class=production-rule>B &rarr; A[+B]A[-B]+B</span>
+        </div>
+      </div>
+
+      <figure>
+        <img class="hover-zoom" src="resources/c3_7.png">
+        <figcaption> The system after seven iterations.</figcaption>
+      </figure>
+
+      <p>
+      This time there is another symbol 'B' which is ignored by the turtle, but represents invisible 'nodes' that the plant structure grows from.
+      This <em>node-rewriting</em> method generates structures which, at least to someone like me with no botany background, are looking pretty plant-like.
+      </p>
+
+      <h2> Randomness </h2>
+      <p> 
+      Using this method to generate plant images has a downside: all copies of a plant are totally identical, and graphics tricks like scaling and rotating can only help that so much.
+      </p>
+
+      <p>
+      One solution is to incorporate randomness into the rules themselves, emulating how a plant may or may not grow depending on external factors (weather etc.).
+      This creates plants with a more realistic diversity to them, while still feeling like the same species.
+      </p>
+
+      <div style="text-align:center">
+        <div class="L-System">
+          <span class=axiom>A</span>
+          <br>
+          <br>
+          <span class=production-rule>A &rarr; (33%) A[+A]A[-A]A </span>
+          <br>
+          <br>
+          <span class=production-rule>A &rarr;(33%)  A[+A]A </span>
+          <br>
+          <br>
+          <span class=production-rule>A &rarr;(33%)  A[-A]A </span>
+        </div>
+      </div>
+
+      <p>
+      This system can be viewed in the app above as "Stochastic branching".
+      Hit 'new rng seed' to generate more variants.
+      </p>
+      <figure>
+        <div class="side-by-side-3">
+          <img class="hover-zoom" src="resources/crand2.png">
+          <img class="hover-zoom" src="resources/crand1.png">
+          <img class="hover-zoom" src="resources/crand3.png">
+          <figcaption> More randomised plants using ABoP 1.31(b) but altering some probabilities.</figcaption>
+        </div>
+      </figure>
+
+
+
+      <h2> History </h2>
+      <p>
+      The L in L-system is named after Aristid Lindenmayer, a biologist who came up them to describe the growth of simple organisms like yeast and algae.
+      </p>
+      <p>
+      These L-systems turned out to also be pretty good at describing the growth of larger things (trees/flowers/etc) which eventually caught the interest of the computer graphics community.
+      </p>
+      <p>
+      They were the topic of lectures at SIGGRAPH in 1988 and 1989, and those lecture notes became a book, 'The Algorithmic Beauty of Plants', from which I originally discovered this concept.
+      </p>
+
+      <h2> TODO list </h2>
+      <ul>
+        <li> UI for contextual mapping (the app already supports it - see any of the context-sensitive examples). </li>
+        <li> Parametric-matching. </li>
+        <li> 3D drawing. </li>
+      </ul>
+
+      <h2> Further Reading </h2>
+      <ul>
+        <li>
+          [GAoL] Prusinkiewicz, Przemyslaw. “Graphical Applications of L-systems.”, 1986.
+        </li>
+        <li>
+          P. Prusinkiewicz, "Applications of L-systems to computer imagery" Springer Berlin Heidelberg, 1987. <a href="https://doi.org/10.1007/3-540-18771-5_74">https://doi.org/10.1007/3-540-18771-5_74</a>.
+        </li>
+        <li>
+          Przemyslaw Prusinkiewicz, Aristid Lindenmayer, and James Hanan. 1988. "Development models of herbaceous plants for computer imagery purposes."" SIGGRAPH Comput. Graph. 22, 4 (Aug. 1988), 141–150. <a href="https://doi.org/10.1145/378456.378503">https://doi.org/10.1145/378456.378503</a>
+        </li>
+        <li>
+          [ABoP] P. Prusinkiewicz and A. Lindenmayer, "The Algorithmic Beauty of Plants." New York: Springer-Verlag, 1990. 
+        </li>
+
+
+      </ul>
+      <div style="text-align:center;"> * </div> 
     </div>
-  </div>
-
-  <div id="content">
-  <p>
-    This app uses L-Systems to draw 2D figures, like plants and fractals.
-    Use the menu at the top to load examples and the bar at the bottom to control the number of iterations.
-  </p>
-  <h1 id="fern">L-System Plant Generator</h1>
-
-
-
-
-
-  <h2> How it works </h2>
-  <p>
-    An L-System consists of a starting symbol/symbols called the <em>axiom</em>, along with <em>production rules</em> which manipulate those symbols (this terminology comes from <a href="https://en.wikipedia.org/wiki/Formal_grammar">formal language theory</a>).
-  </p>
-  <p>
-    A production rule looks like this: 
-    <span class=production-rule> A &rarr; AB </span>
-  </p>
-  <p>
-    This rule simply replaces the symbol A with the word AB.
-    Applying it to the string "A" generates the string "AB".
-    Applying it again to the result yields  "ABB".
-    Simple.
-
-  </p>
-  <p>
-    Let's add another rule: <span class=production-rule> B &rarr; A </span>
-  </p>
-  <p>
-    Now when we go through each character applying the appropriate rule the result looks like this:
-  </p>
-
-  <p style="text-align: center;">
-    "A" &rarr; "AB" &rarr; "ABA" &rarr; "ABAAB" &rarr; <br> "ABAABABA"  &rarr; ...
-  </p>
-  <p>
-    You can identify 'A' as an organism capable of reproduction (or a branch of a tree/stem of a plant etc.) and 'B' as the offspring (or new shoots on a tree/plant) then the first rule is just <em>reproduction</em> ('A' produces a 'B') and the second rule is kinda like <em>ageing</em> ('B' matures into an 'A').
-  </p>
-  <p>
-    This system is already complex enough to describe a type of branching seen on some trees, root systems and plants, which have a Fibonacci sequence of branches/roots/stems just like the length of strings produced by this system.
-  </p>
-  <figure>
-    <img class="hover-zoom" src="resources/branches.gif">
-    <figcaption>Fibonacci numbers in <em>sneezewort</em>, found on Jill Britton's webpage (<a href="https://web.archive.org/web/20160905160202/http://britton.disted.camosun.bc.ca/fibslide/jbfibslide.htm">archived</a>).</figcaption>
-  </figure>
-
-  <h2> Graphics </h2>
-  <p>
-    The next step is to turn these L-Systems into images.
-  </p>
-  <p>
-    One way is the turtle interpretation, where the symbols in the strings are used as instructions that control a moving cursor (the turtle) around the screen, drawing lines as it moves.
-  </p>
-  <p>
-    Consider this L-System (taken from The Alg. Beauty of Plants 1.24(a)):
-  </p>
-  <div style="text-align:center">
-    <div class="L-System">
-      <span class=axiom>A</span>
-      <br>
-      <br>
-      <span class=production-rule>A &rarr; A[+A]A[-A]A</span>
-    </div>
-  </div>
-  <span style="position:relative; left:420px; top:-76px;">  &larr; The Axiom </span>
-  <span style="position:relative; left:320px; top:-33px;">  &larr; The Production rule(s)</span>
-  <p>
-    Running this system a couple times gives:
-  </p>
-  <p style="text-align: center; margin-left: 1%;">
-    A &rarr; A[+A]A[-A]A &rarr; A[+A]A[-A]A[+A[+A]A[-A]A]A[+A]A[-A]A[-A[+A]A[-A]A]A[+A]A[-A]A &rarr; ...
-  </p>
-  <p>
-    Now we can draw this. 
-    Whenever the turtle sees an 'A' it moves forward and whenever it sees +/- it turns left/right.
-    The square brackets push/pop the turtle's current position, so it can draw something then return to where it was.
-  </p>
-  <p>
-    That's all we need for the turtle to draw this:
-  </p>
-  <figure>
-    <div class="side-by-side-3">
-      <img class="hover-zoom" src="resources/c1_1.png">
-      <img class="hover-zoom" src="resources/c1_2.png">
-      <img class="hover-zoom" src="resources/c1_3.png">
-    </div>
-    <figcaption>  The above L-system after one, two and three iterations. </figcaption>
-  </figure>
-
-  <figure>
-    <img class="hover-zoom" src="resources/c1_5.png">
-    <figcaption> The system after five iterations.</figcaption>
-  </figure>
-
-  <p>
-    The turtle starts at the bottom of the figure, and draws one line at a time.
-    We can now see graphically what the rule is doing: it takes each straight line 'A' and replaces it with the five line pattern 'A[+A]A[-A]A' you see in the first panel.
-    Doing this repeatedly generates this self-similar plant-like structure.
-  </p>
-  <p>
-    Making the rules slightly more complicated we get this (taken from The Alg. Beauty of Plants 1.24(c)):
-  </p>
-  <div style="text-align:center">
-    <div class="L-System">
-      <span class=axiom>A</span>
-      <br>
-      <br>
-      <span class=production-rule>A &rarr; AA-[-A+A+A]+[+A-A-A]</span>
-    </div>
-  </div>
-
-  <figure>
-    <div class="side-by-side-3">
-      <img class="hover-zoom" src="resources/c2_1.png">
-      <img class="hover-zoom" src="resources/c2_2.png">
-      <img class="hover-zoom" src="resources/c2_3.png">
-    </div>
-    <figcaption>  The above L-system after one, two and three iterations. </figcaption>
-  </figure>
-
-  <figure>
-    <img class="hover-zoom" src="resources/c2_4.png">
-    <figcaption> The system after four iterations.</figcaption>
-  </figure>
-
-  <p>
-    This time you can see each straight line 'A' being replaced with the Y-like shape made of eight lines.
-  </p>
-  <p>
-    Let's get more symbols involved (taken from the Alg. Beauty of Plants 1.24(f)):
-  </p>
-  <div style="text-align:center">
-    <div class="L-System">
-      <span class=axiom>B</span>
-      <br>
-      <br>
-      <span class=production-rule>A &rarr; AA </span>
-      <br>
-      <br>
-      <span class=production-rule>B &rarr; A[+B]A[-B]+B</span>
-    </div>
-  </div>
-
-  <figure>
-    <img class="hover-zoom" src="resources/c3_7.png">
-    <figcaption> The system after seven iterations.</figcaption>
-  </figure>
-
-  <p>
-    This time there is another symbol 'B' which is ignored by the turtle, but represents invisible 'nodes' that the plant structure grows from.
-    This <em>node-rewriting</em> method generates structures which, at least to someone like me with no botany background, are looking pretty plant-like.
-  </p>
-
-  <h2> Randomness </h2>
-  <p> 
-    Using this method to generate plant images has a downside: all copies of a plant are totally identical, and graphics tricks like scaling and rotating can only help that so much.
-  </p>
-
-  <p>
-    One solution is to incorporate randomness into the rules themselves, emulating how a plant may or may not grow depending on external factors (weather etc.).
-    This creates plants with a more realistic diversity to them, while still feeling like the same species.
-  </p>
-
-  <div style="text-align:center">
-    <div class="L-System">
-      <span class=axiom>A</span>
-      <br>
-      <br>
-      <span class=production-rule>A &rarr; (33%) A[+A]A[-A]A </span>
-      <br>
-      <br>
-      <span class=production-rule>A &rarr;(33%)  A[+A]A </span>
-      <br>
-      <br>
-      <span class=production-rule>A &rarr;(33%)  A[-A]A </span>
-    </div>
-  </div>
-
-  <p>
-    This system can be viewed in the app above as "Stochastic branching".
-    Hit 'new rng seed' to generate more variants.
-  </p>
-  <figure>
-    <div class="side-by-side-3">
-      <img class="hover-zoom" src="resources/crand2.png">
-      <img class="hover-zoom" src="resources/crand1.png">
-      <img class="hover-zoom" src="resources/crand3.png">
-      <figcaption> More randomised plants using ABoP 1.31(b) but altering some probabilities.</figcaption>
-    </div>
-  </figure>
-
-
-
-  <h2> History </h2>
-  <p>
-    The L in L-system is named after Aristid Lindenmayer, a biologist who came up them to describe the growth of simple organisms like yeast and algae.
-  </p>
-  <p>
-    These L-systems turned out to also be pretty good at describing the growth of larger things (trees/flowers/etc) which eventually caught the interest of the computer graphics community.
-  </p>
-  <p>
-    They were the topic of lectures at SIGGRAPH in 1988 and 1989, and those lecture notes became a book, 'The Algorithmic Beauty of Plants', from which I originally discovered this concept.
-  </p>
-
-  <h2> TODO list </h2>
-  <ul>
-    <li> UI for contextual mapping (the app already supports it - see any of the context-sensitive examples). </li>
-    <li> Parametric-matching. </li>
-    <li> 3D drawing. </li>
-  </ul>
-
-  <h2> Further Reading </h2>
-  <ul>
-    <li>
-      [GAoL] Prusinkiewicz, Przemyslaw. “Graphical Applications of L-systems.”, 1986.
-    </li>
-    <li>
-      P. Prusinkiewicz, "Applications of L-systems to computer imagery" Springer Berlin Heidelberg, 1987. <a href="https://doi.org/10.1007/3-540-18771-5_74">https://doi.org/10.1007/3-540-18771-5_74</a>.
-    </li>
-    <li>
-      Przemyslaw Prusinkiewicz, Aristid Lindenmayer, and James Hanan. 1988. "Development models of herbaceous plants for computer imagery purposes."" SIGGRAPH Comput. Graph. 22, 4 (Aug. 1988), 141–150. <a href="https://doi.org/10.1145/378456.378503">https://doi.org/10.1145/378456.378503</a>
-    </li>
-    <li>
-      [ABoP] P. Prusinkiewicz and A. Lindenmayer, "The Algorithmic Beauty of Plants." New York: Springer-Verlag, 1990. 
-    </li>
-
-
-  </ul>
-<div style="text-align:center;"> * </div> 
-</div>
-</body>
+  </body>
 
 </html>
